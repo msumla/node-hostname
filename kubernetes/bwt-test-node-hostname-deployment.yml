@@ -92,8 +92,8 @@ spec:
       app.kubernetes.io/name: bwt-test-node-hostname-deployment
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+      maxSurge: 1
+      maxUnavailable: 0
     type: RollingUpdate
   template:
     metadata:
@@ -102,10 +102,28 @@ spec:
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         app.kubernetes.io/name: bwt-test-node-hostname-deployment
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - bwt-test-node-hostname-deployment
+              topologyKey: kubernetes.io/hostname
       containers:
         - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
           imagePullPolicy: IfNotPresent
           name: node-hostname-sha256-1
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 1
           livenessProbe:
             httpGet:
               path: /
@@ -122,6 +140,7 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
+            successThreshold: 1
           resources:
             limits:
               ephemeral-storage: 1Gi
