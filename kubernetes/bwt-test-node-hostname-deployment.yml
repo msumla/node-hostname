@@ -84,7 +84,7 @@ metadata:
   name: bwt-test-node-hostname-deployment
   namespace: bwt-test-namespace
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: bwt-test-node-hostname-deployment
