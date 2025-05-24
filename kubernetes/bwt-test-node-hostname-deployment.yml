@@ -102,7 +102,8 @@ spec:
   selector:
     matchLabels:
       app: bwt-test-node-hostname-deployment
-      app.kubernetes.io/managed-by: cloud-console
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+      app.kubernetes.io/name: bwt-test-node-hostname-deployment
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -112,6 +113,8 @@ spec:
     metadata:
       labels:
         app: bwt-test-node-hostname-deployment
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        app.kubernetes.io/name: bwt-test-node-hostname-deployment
     spec:
       containers:
         - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
@@ -280,6 +283,7 @@ spec:
       targetPort: 443
   selector:
     app: bwt-test-node-hostname-deployment
-    app.kubernetes.io/managed-by: cloud-console
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app.kubernetes.io/name: bwt-test-node-hostname-deployment
   sessionAffinity: None
   type: LoadBalancer
