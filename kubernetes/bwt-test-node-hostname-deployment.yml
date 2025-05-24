@@ -5,8 +5,6 @@ metadata:
     autopilot.gke.io/resource-adjustment: >-
       {"input":{"containers":[{"name":"node-hostname-sha256-1"}]},"output":{"containers":[{"limits":{"ephemeral-storage":"1Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"node-hostname-sha256-1"}]},"computeClassAtAdmission":"Default","modified":true}
     autopilot.gke.io/warden-version: 32.29.0-gke.1
-  labels:
-    app: bwt-test-node-hostname-deployment
   managedFields:
     - apiVersion: apps/v1
       fieldsType: FieldsV1
@@ -14,7 +12,6 @@ metadata:
         'f:metadata':
           'f:labels':
             .: {}
-            'f:app': {}
             'f:app.kubernetes.io/managed-by': {}
         'f:spec':
           'f:progressDeadlineSeconds': {}
@@ -37,6 +34,7 @@ metadata:
               'f:containers':
                 'k:{"name":"node-hostname-sha256-1"}':
                   .: {}
+                  'f:image': {}
                   'f:imagePullPolicy': {}
                   'f:name': {}
                   'f:resources': {}
@@ -49,19 +47,7 @@ metadata:
               'f:terminationGracePeriodSeconds': {}
       manager: unknown
       operation: Update
-      time: '2025-05-24T15:03:28Z'
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          'f:template':
-            'f:spec':
-              'f:containers':
-                'k:{"name":"node-hostname-sha256-1"}':
-                  'f:image': {}
-      manager: kubectl-edit
-      operation: Update
-      time: '2025-05-24T15:07:59Z'
+      time: '2025-05-24T15:18:08Z'
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
@@ -94,7 +80,7 @@ metadata:
       manager: kube-controller-manager
       operation: Update
       subresource: status
-      time: '2025-05-24T15:08:01Z'
+      time: '2025-05-24T15:28:10Z'
   name: bwt-test-node-hostname-deployment
   namespace: bwt-test-namespace
 spec:
@@ -102,8 +88,7 @@ spec:
   selector:
     matchLabels:
       app: bwt-test-node-hostname-deployment
-      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-      app.kubernetes.io/name: bwt-test-node-hostname-deployment
+      app.kubernetes.io/managed-by: cloud-console
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -113,8 +98,6 @@ spec:
     metadata:
       labels:
         app: bwt-test-node-hostname-deployment
-        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-        app.kubernetes.io/name: bwt-test-node-hostname-deployment
     spec:
       containers:
         - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
@@ -198,7 +181,7 @@ metadata:
       manager: vpa-recommender
       operation: Update
       subresource: status
-      time: '2025-05-24T15:06:48Z'
+      time: '2025-05-24T15:32:01Z'
   name: bwt-test-node-hostname-deployment-hpa-uizm
   namespace: bwt-test-namespace
 spec:
@@ -283,7 +266,6 @@ spec:
       targetPort: 443
   selector:
     app: bwt-test-node-hostname-deployment
-    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-    app.kubernetes.io/name: bwt-test-node-hostname-deployment
+    app.kubernetes.io/managed-by: cloud-console
   sessionAffinity: None
   type: LoadBalancer
