@@ -106,6 +106,22 @@ spec:
         - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
           imagePullPolicy: IfNotPresent
           name: node-hostname-sha256-1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
           resources:
             limits:
               ephemeral-storage: 1Gi
