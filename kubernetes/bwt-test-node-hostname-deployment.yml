@@ -114,8 +114,7 @@ spec:
         app: bwt-test-node-hostname-deployment
     spec:
       containers:
-        - image: europe-north1-docker.pkg.dev/bwt-test-460814/bwt-test-registry/node-hostname
-          tag: latest
+        - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
           imagePullPolicy: IfNotPresent
           name: node-hostname-sha256-1
           resources:
