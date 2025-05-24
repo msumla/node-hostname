@@ -115,6 +115,7 @@ spec:
     spec:
       containers:
         - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
+          tag: latest
           imagePullPolicy: IfNotPresent
           name: node-hostname-sha256-1
           resources:
