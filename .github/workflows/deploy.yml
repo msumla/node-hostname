@@ -35,21 +35,8 @@ jobs:
           docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
           docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          install_components: 'gke-gcloud-auth-plugin'
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Configure Docker
-        run: |
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
-          docker-credential-gcr configure-docker --registries=gcr.io
+      - name: Login to GCR
+        run: echo ${{ secrets.GCR_TOKEN }} | docker login -u _dcgcloud --password-stdin gcr.io
 
       - name: Push to GCR
         run: |
