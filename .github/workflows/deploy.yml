@@ -8,8 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  GCR_HOSTNAME: gcr.io
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/github.com/${{ github.repository }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
 
 jobs:
   deploy:
@@ -42,7 +41,8 @@ jobs:
           install_components: 'gke-gcloud-auth-plugin'
 
       - name: Configure Docker
-        run: gcloud auth configure-docker ${{ env.GCR_HOSTNAME }}
+        run: |
+          gcloud auth configure-docker gcr.io --quiet
 
       - name: Push to GCR
         run: |
@@ -60,7 +60,6 @@ jobs:
       - name: Deploy to GKE
         run: |
           cd kubernetes/overlays/prod
-          kustomize edit set image ${{ env.IMAGE_NAME }}:${{ github.sha }}
           kubectl apply -k .
           kubectl rollout status deployment/bwt-test-node-hostname -n bwt-test-namespace
 
