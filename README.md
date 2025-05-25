@@ -1,216 +1,136 @@
-# node-hostname
+# Node Hostname Service
 
-A simple Node.js express web server that provides system information and demonstrates basic error handling.
+A simple Node.js service that returns the hostname of the container it's running in. This is useful for testing load balancing and pod distribution in Kubernetes.
 
 ## Features
 
-- Returns system hostname and application version
-- Includes error handling demonstration
-- RESTful API endpoints
+- Returns container hostname on HTTP GET requests
+- Health check endpoint at `/`
+- Configurable port (default: 3000)
+- Docker container support
+- Kubernetes deployment with Kustomize
+- GitHub Actions CI/CD pipeline
 
-## API Endpoints
+## Prerequisites
 
-- `GET /` - Returns system hostname and application version
-  ```json
-  {
-    "hostname": "your-hostname",
-    "version": "0.0.1"
-  }
-  ```
-- `GET /users` - Returns a simple resource message
-- `GET /crash` - Demonstrates error handling (intentionally crashes)
+- Node.js 20.x
+- Docker
+- Google Cloud Platform account
+- GKE cluster
+- GitHub repository
 
-## Installation
+## Local Development
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd node-hostname
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# Install dependencies
-npm install
-```
+2. Run the service:
+   ```bash
+   npm start
+   ```
+
+3. Test the service:
+   ```bash
+   curl http://localhost:3000
+   ```
 
 ## Docker
 
-### Building the Image
+Build and run the Docker container:
 
 ```bash
-# Build the Docker image
 docker build -t node-hostname .
-```
-
-### Running with Docker
-
-```bash
-# Run the container
 docker run -p 3000:3000 node-hostname
 ```
 
-The application will be available at `http://localhost:3000`.
+## Kubernetes Deployment
 
-### Environment Variables
+The application is deployed to GKE using Kustomize. The deployment configuration is in the `kubernetes` directory:
 
-You can customize the port by setting the `PORT` environment variable:
+- `kubernetes/base/` - Base configuration
+- `kubernetes/overlays/prod/` - Production environment configuration
 
-```bash
-docker run -p 8080:8080 -e PORT=8080 node-hostname
-```
+### Resource Requirements
 
-## Usage
+- Memory: 2Gi
+- CPU: 500m
+- Replicas: 2
 
-Start the server:
-```bash
-npm start
-```
+## CI/CD Pipeline
 
-The server will start on port 3000 by default. You can change this by setting the `PORT` environment variable.
+The project uses GitHub Actions for CI/CD with the following workflows:
 
-## Development
+### Pull Request Workflow
 
-To run the application in development mode:
+- Triggers on PR creation to master
+- Builds and tests the application
+- Builds and pushes Docker image to GCR
+- Uses Workload Identity Federation for GCP authentication
 
-```bash
-# Install dependencies
-npm install
+### Deploy Workflow
 
-# Start the server
-npm start
-```
+- Triggers on push to master
+- Builds and pushes Docker image to GCR
+- Deploys to GKE using Kustomize
+- Uses Workload Identity Federation for GCP authentication
 
-The server will automatically restart when you make changes to the code.
+### Revert Process
 
-## Error Handling
+To revert a deployment:
+1. Create a PR that reverts the previous commit
+2. When merged, the deploy workflow will automatically deploy the previous version
+3. The workflow uses the commit SHA to reference the correct Docker image
 
-The application includes built-in error handling that returns JSON responses for:
-- 404 Not Found errors
-- 500 Internal Server errors
+## GCP Setup
 
-Error responses follow this format:
-```json
-{
-  "error": {
-    "message": "Error message",
-    "status": 404
-  }
-}
-```
+1. Create a Workload Identity Pool and Provider:
+   ```bash
+   gcloud iam workload-identity-pools create github-pool \
+     --location="global" \
+     --display-name="GitHub Pool"
 
-## Dependencies
+   gcloud iam workload-identity-pools providers create-oidc github-provider \
+     --location="global" \
+     --workload-identity-pool="github-pool" \
+     --display-name="GitHub Provider" \
+     --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.actor=assertion.actor,attribute.repository_owner=assertion.repository_owner" \
+     --issuer-uri="https://token.actions.githubusercontent.com"
+   ```
 
-- express: Web framework
-- morgan: HTTP request logger
-- debug: Debug utility
-- http-errors: HTTP error handling
-- cookie-parser: Cookie parsing middleware
+2. Create a service account with necessary permissions:
+   ```bash
+   gcloud iam service-accounts create github-actions-sa \
+     --display-name="GitHub Actions Service Account"
 
-## CI/CD Setup
+   gcloud projects add-iam-policy-binding $PROJECT_ID \
+     --member="serviceAccount:github-actions-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role="roles/artifactregistry.writer"
 
-This project uses GitHub Actions for continuous integration and deployment. The workflows are configured to build, test, and deploy the application to Google Kubernetes Engine (GKE).
+   gcloud projects add-iam-policy-binding $PROJECT_ID \
+     --member="serviceAccount:github-actions-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role="roles/container.developer"
 
-### Prerequisites
+   gcloud projects add-iam-policy-binding $PROJECT_ID \
+     --member="serviceAccount:github-actions-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role="roles/container.clusterViewer"
+   ```
 
-1. A Google Cloud Platform (GCP) project
-2. A GKE cluster
-3. A GitHub repository
-4. Required GCP permissions
+3. Allow GitHub to impersonate the service account:
+   ```bash
+   gcloud iam service-accounts add-iam-policy-binding github-actions-sa@$PROJECT_ID.iam.gserviceaccount.com \
+     --role="roles/iam.workloadIdentityUser" \
+     --member="principalSet://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github-pool/attribute.repository/$REPO_OWNER/$REPO_NAME"
+   ```
 
-### Setting up GCP Service Account
+## GitHub Repository Setup
 
-1. Create a service account for GitHub Actions:
-```bash
-gcloud iam service-accounts create github-actions \
-    --description="Service account for GitHub Actions" \
-    --display-name="GitHub Actions"
-```
+Required secrets:
+- `GCP_PROJECT_ID`: Your GCP project ID
+- `GKE_CLUSTER`: Your GKE cluster name
+- `GKE_ZONE`: Your GKE cluster zone
 
-2. Grant necessary roles to the service account:
-```bash
-gcloud projects add-iam-policy-binding bwt-test-460814 \
-    --member="serviceAccount:github-actions@bwt-test-460814.iam.gserviceaccount.com" \
-    --role="roles/container.admin"
+## License
 
-gcloud projects add-iam-policy-binding bwt-test-460814 \
-    --member="serviceAccount:github-actions@bwt-test-460814.iam.gserviceaccount.com" \
-    --role="roles/storage.admin"
-```
-
-3. Create and download the service account key:
-```bash
-gcloud iam service-accounts keys create key.json \
-    --iam-account=github-actions@bwt-test-460814.iam.gserviceaccount.com
-```
-
-### GitHub Secrets Setup
-
-Add the following secrets to your GitHub repository (Settings > Secrets and variables > Actions):
-
-- `GCP_PROJECT_ID`: Your GCP project ID (e.g., `bwt-test-460814`)
-- `GCP_SA_KEY`: The entire contents of the `key.json` file
-- `GKE_CLUSTER`: Your GKE cluster name (e.g., `bwt-test-cluster`)
-- `GKE_ZONE`: Your GKE cluster zone (e.g., `europe-north1`)
-
-### Workflows
-
-The repository includes three GitHub Actions workflows:
-
-1. **Pull Request Workflow** (`.github/workflows/pr.yml`)
-   - Triggers on pull requests to main branch
-   - Builds and tests the application
-   - Creates a preview deployment
-
-2. **Deploy Workflow** (`.github/workflows/deploy.yml`)
-   - Triggers on pushes to main branch
-   - Builds and tests the application
-   - Pushes Docker image to Google Container Registry
-   - Deploys to GKE using Kustomize
-
-3. **Revert Workflow** (`.github/workflows/revert.yml`)
-   - Triggers when a pull request is closed
-   - Reverts the deployment if needed
-
-### Manual Deployment
-
-To deploy manually:
-
-```bash
-# Build and push the Docker image
-docker build -t gcr.io/bwt-test-460814/node-hostname:latest .
-docker push gcr.io/bwt-test-460814/node-hostname:latest
-
-# Deploy using Kustomize
-cd kubernetes/overlays/prod
-kustomize edit set image gcr.io/bwt-test-460814/node-hostname:latest
-kubectl apply -k .
-```
-
-### Monitoring Deployments
-
-Check deployment status:
-```bash
-# Check pods
-kubectl get pods -n bwt-test-namespace -l app=node-hostname
-
-# Check deployment
-kubectl get deployment -n bwt-test-namespace bwt-test-node-hostname
-
-# Check ingress
-kubectl get ingress -n bwt-test-namespace bwt-test-node-hostname
-```
-
-### Troubleshooting
-
-1. **Authentication Issues**
-   - Verify GCP service account key is correctly set in GitHub secrets
-   - Check service account has required permissions
-   - Ensure GKE cluster credentials are up to date
-
-2. **Deployment Failures**
-   - Check pod logs: `kubectl logs -n bwt-test-namespace -l app=node-hostname`
-   - Verify image exists in GCR: `gcloud container images list-tags gcr.io/bwt-test-460814/node-hostname`
-   - Check ingress status: `kubectl describe ingress -n bwt-test-namespace bwt-test-node-hostname`
-
-3. **Workflow Failures**
-   - Check GitHub Actions logs for detailed error messages
-   - Verify all required secrets are set
-   - Ensure workflow files are in the correct location (`.github/workflows/`)
+MIT
