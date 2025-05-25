@@ -37,7 +37,8 @@ jobs:
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker gcr.io --quiet
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
 
       - name: Push to GCR
         run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}

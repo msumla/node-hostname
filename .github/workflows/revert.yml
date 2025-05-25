@@ -34,7 +34,8 @@ jobs:
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker gcr.io --quiet
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
 
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
