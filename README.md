@@ -54,9 +54,9 @@ The application is deployed to GKE using Kustomize. The deployment configuration
 
 ### Resource Requirements
 
-- Memory: 256Mi
-- CPU: 100m
-- Replicas: 3
+- Memory: 2Gi
+- CPU: 500m
+- Replicas: 2
 
 ## CI/CD Pipeline
 
