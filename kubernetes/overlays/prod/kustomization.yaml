@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namePrefix: bwt-test-
+
+labels:
+  - pairs:
+      environment: production
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+
+patches:
+  - target:
+      kind: Deployment
+      name: node-hostname
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 3
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: 4Gi
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/cpu
+        value: 1000m
+
+  - target:
+      kind: Service
+      name: node-hostname
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          cloud.google.com/neg: '{"ingress":true}'
+
+  - target:
+      kind: Ingress
+      name: node-hostname
+    patch: |-
+      - op: add
+        path: /metadata/annotations/ingress.gcp.kubernetes.io~1pre-shared-cert
+        value: mcrt-92155b26-8081-4b8e-8d94-703083fb2913 

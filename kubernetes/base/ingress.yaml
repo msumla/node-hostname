@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-hostname
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    networking.gke.io/managed-certificates: bwt-test.cloud-agnostic.com
+    ingress.gcp.kubernetes.io/pre-shared-cert: mcrt-92155b26-8081-4b8e-8d94-703083fb2913
+    ingress.kubernetes.io/ssl-cert: mcrt-92155b26-8081-4b8e-8d94-703083fb2913
+    kubernetes.io/ingress.global-static-ip-name: bwt-test-node-hostname
+    networking.gke.io/ingress-finalizer-V2: "true"
+spec:
+  rules:
+    - host: bwt-test.cloud-agnostic.com
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: node-hostname
+                port:
+                  number: 80 
