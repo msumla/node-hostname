@@ -8,8 +8,8 @@ namePrefix: bwt-test-
 
 images:
   - name: node-hostname
-    newName: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
-    newTag: latest
+    newName: gcr.io/bwt-test-460814/node-hostname
+    newTag: 84bc9a9e083072336120d64ea3c131c0b5fb7c02
 
 labels:
   - pairs:
@@ -26,10 +26,10 @@ patches:
         value: 3
       - op: replace
         path: /spec/template/spec/containers/0/resources/requests/memory
-        value: 4Gi
+        value: 256Mi
       - op: replace
         path: /spec/template/spec/containers/0/resources/requests/cpu
-        value: 1000m
+        value: 100m
 
   - target:
       kind: Service
