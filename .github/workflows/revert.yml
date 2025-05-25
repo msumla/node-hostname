@@ -13,6 +13,8 @@ env:
 
 jobs:
   revert:
+    # Only run if PR title or description contains [revert] or [rollback]
+    if: contains(github.event.pull_request.title, '[revert]') || contains(github.event.pull_request.title, '[rollback]') || contains(github.event.pull_request.body, '[revert]') || contains(github.event.pull_request.body, '[rollback]')
     runs-on: ubuntu-latest
     environment: production
     permissions:
