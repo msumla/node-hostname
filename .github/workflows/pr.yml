@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/github.com/${{ github.repository }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
 
 jobs:
   build-and-test:
@@ -38,14 +38,8 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Login to GCR
-        run: |
-          # Create a temporary file for the service account key
-          echo '${{ secrets.GCP_SA_KEY }}' > /tmp/key.json
-          # Login using the service account key
-          cat /tmp/key.json | docker login -u _json_key --password-stdin gcr.io
-          # Clean up
-          rm /tmp/key.json
+      - name: Configure Docker
+        run: gcloud auth configure-docker gcr.io --quiet
 
       - name: Push to GCR
         run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }} 
