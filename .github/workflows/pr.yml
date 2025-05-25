@@ -40,7 +40,10 @@ jobs:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker gcr.io --quiet
+        run: |
+          gcloud auth configure-docker gcr.io --quiet
+          echo '{"registry-mirrors": ["https://gcr.io"]}' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
 
       - name: Push to GCR
         run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }} 
