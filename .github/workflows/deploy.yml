@@ -36,7 +36,7 @@ jobs:
           docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
 
       - name: Login to GCR
-        run: echo ${{ secrets.GCR_TOKEN }} | docker login -u _dcgcloud --password-stdin gcr.io
+        run: echo ${{ secrets.GCR_TOKEN }} | docker login -u oauth2accesstoken --password-stdin gcr.io
 
       - name: Push to GCR
         run: |
