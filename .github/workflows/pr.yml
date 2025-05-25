@@ -9,7 +9,7 @@ env:
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   GCR_HOSTNAME: gcr.io
-  IMAGE_NAME: ${{ env.GCR_HOSTNAME }}/${{ env.PROJECT_ID }}/github.com/${{ github.repository }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
 
 jobs:
   build-and-test:
