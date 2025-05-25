@@ -1,0 +1,73 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  GCR_HOSTNAME: gcr.io
+  IMAGE_NAME: ${{ env.GCR_HOSTNAME }}/${{ env.PROJECT_ID }}/github.com/${{ github.repository }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          install_components: 'gke-gcloud-auth-plugin'
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.GCR_HOSTNAME }}
+
+      - name: Push to GCR
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.IMAGE_NAME }}:latest
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_ZONE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy to GKE
+        run: |
+          cd kubernetes/overlays/prod
+          kustomize edit set image ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          kubectl apply -k .
+          kubectl rollout status deployment/bwt-test-node-hostname -n bwt-test-namespace
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n bwt-test-namespace -l app=node-hostname
+          kubectl get ingress -n bwt-test-namespace bwt-test-node-hostname 
