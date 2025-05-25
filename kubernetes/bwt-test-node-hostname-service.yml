@@ -1,0 +1,41 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      cloud.google.com/neg: '{"ingress":true}'
+      cloud.google.com/neg-status: '{"network_endpoint_groups":{"80":"k8s1-5b52be8a-bwt-test-nam-bwt-test-node-hostname-de-8-ff24ec3b"},"zones":["europe-north1-b","europe-north1-c"]}'
+    creationTimestamp: "2025-05-24T18:30:49Z"
+    generateName: bwt-test-node-hostname-deployment-
+    labels:
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+      app.kubernetes.io/name: bwt-test-node-hostname-deployment
+      app.kubernetes.io/version: 5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4
+    name: bwt-test-node-hostname-deployment-g99gs
+    namespace: bwt-test-namespace
+    resourceVersion: "1748165032457263016"
+    uid: 0a1736be-47a5-46e8-adf1-7cb292bfc61c
+  spec:
+    clusterIP: 34.118.228.134
+    clusterIPs:
+    - 34.118.228.134
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      app: bwt-test-node-hostname-deployment
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+      app.kubernetes.io/name: bwt-test-node-hostname-deployment
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""

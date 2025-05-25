@@ -1,0 +1,61 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    gcb-build-id: b1ce37de-ad53-4fe7-a413-d3b6e05e9d08
+    gcb-trigger-id: acaef784-b39d-4ff9-ab56-82c229ee3205
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"autoscaling/v2","kind":"HorizontalPodAutoscaler","metadata":{"annotations":{"gcb-build-id":"b1ce37de-ad53-4fe7-a413-d3b6e05e9d08","gcb-trigger-id":"acaef784-b39d-4ff9-ab56-82c229ee3205"},"labels":{"app":"bwt-test-node-hostname-deployment","app.kubernetes.io/managed-by":"gcp-cloud-build-deploy","app.kubernetes.io/name":"bwt-test-node-hostname-deployment","app.kubernetes.io/version":"5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4"},"managedFields":[{"apiVersion":"autoscaling/v2","fieldsType":"FieldsV1","fieldsV1":{"f:metadata":{"f:labels":{".":{},"f:app":{},"f:app.kubernetes.io/managed-by":{}}},"f:spec":{"f:maxReplicas":{},"f:metrics":{},"f:minReplicas":{},"f:scaleTargetRef":{"f:apiVersion":{},"f:kind":{},"f:name":{}}}},"manager":"unknown","operation":"Update","time":"2025-05-24T15:03:28Z"},{"apiVersion":"autoscaling/v2","fieldsType":"FieldsV1","fieldsV1":{"f:status":{"f:conditions":{".":{},"k:{\"type\":\"AbleToScale\"}":{".":{},"f:lastTransitionTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}},"k:{\"type\":\"ScalingActive\"}":{".":{},"f:lastTransitionTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}},"k:{\"type\":\"ScalingLimited\"}":{".":{},"f:lastTransitionTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}}},"f:currentMetrics":{},"f:currentReplicas":{},"f:desiredReplicas":{}}},"manager":"vpa-recommender","operation":"Update","subresource":"status","time":"2025-05-24T15:32:01Z"}],"name":"bwt-test-node-hostname-deployment-hpa-uizm","namespace":"bwt-test-namespace"},"spec":{"maxReplicas":5,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":80,"type":"Utilization"}},"type":"Resource"}],"minReplicas":2,"scaleTargetRef":{"apiVersion":"apps/v1","kind":"Deployment","name":"bwt-test-node-hostname-deployment"}}}
+  creationTimestamp: "2025-05-24T15:03:28Z"
+  labels:
+    app: bwt-test-node-hostname-deployment
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app.kubernetes.io/name: bwt-test-node-hostname-deployment
+    app.kubernetes.io/version: 5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4
+  name: bwt-test-node-hostname-deployment-hpa-uizm
+  namespace: bwt-test-namespace
+  resourceVersion: "1748165252395823018"
+  uid: 734efd20-8327-49f5-be08-9721ae3fa758
+spec:
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: bwt-test-node-hostname-deployment
+status:
+  conditions:
+  - lastTransitionTime: "2025-05-24T16:47:32Z"
+    message: recommended size matches current size
+    reason: ReadyForNewScale
+    status: "True"
+    type: AbleToScale
+  - lastTransitionTime: "2025-05-24T16:42:01Z"
+    message: the HPA was able to successfully calculate a replica count from cpu resource
+      utilization (percentage of request)
+    reason: ValidMetricFound
+    status: "True"
+    type: ScalingActive
+  - lastTransitionTime: "2025-05-24T16:47:32Z"
+    message: the desired replica count is less than the minimum replica count
+    reason: TooFewReplicas
+    status: "True"
+    type: ScalingLimited
+  currentMetrics:
+  - resource:
+      current:
+        averageUtilization: 1
+        averageValue: 3m
+        value: 5m
+      name: cpu
+    type: Resource
+  currentReplicas: 2
+  desiredReplicas: 2
+  lastScaleTime: "2025-05-24T16:41:01Z"

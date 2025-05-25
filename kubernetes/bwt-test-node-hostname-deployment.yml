@@ -1,146 +1,88 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  annotations:
-    autopilot.gke.io/resource-adjustment: >-
-      {"input":{"containers":[{"name":"node-hostname-sha256-1"}]},"output":{"containers":[{"limits":{"ephemeral-storage":"1Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"node-hostname-sha256-1"}]},"computeClassAtAdmission":"Default","modified":true}
-    autopilot.gke.io/warden-version: 32.29.0-gke.1
-  managedFields:
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:labels':
-            .: {}
-            'f:app.kubernetes.io/managed-by': {}
-        'f:spec':
-          'f:progressDeadlineSeconds': {}
-          'f:replicas': {}
-          'f:revisionHistoryLimit': {}
-          'f:selector': {}
-          'f:strategy':
-            'f:rollingUpdate':
-              .: {}
-              'f:maxSurge': {}
-              'f:maxUnavailable': {}
-            'f:type': {}
-          'f:template':
-            'f:metadata':
-              'f:labels':
-                .: {}
-                'f:app': {}
-                'f:app.kubernetes.io/managed-by': {}
-            'f:spec':
-              'f:containers':
-                'k:{"name":"node-hostname-sha256-1"}':
-                  .: {}
-                  'f:image': {}
-                  'f:imagePullPolicy': {}
-                  'f:name': {}
-                  'f:resources': {}
-                  'f:terminationMessagePath': {}
-                  'f:terminationMessagePolicy': {}
-              'f:dnsPolicy': {}
-              'f:restartPolicy': {}
-              'f:schedulerName': {}
-              'f:securityContext': {}
-              'f:terminationGracePeriodSeconds': {}
-      manager: unknown
-      operation: Update
-      time: '2025-05-24T15:18:08Z'
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:annotations':
-            'f:deployment.kubernetes.io/revision': {}
-        'f:status':
-          'f:conditions':
-            .: {}
-            'k:{"type":"Available"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:lastUpdateTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-            'k:{"type":"Progressing"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:lastUpdateTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-          'f:observedGeneration': {}
-          'f:replicas': {}
-          'f:unavailableReplicas': {}
-          'f:updatedReplicas': {}
-      manager: kube-controller-manager
-      operation: Update
-      subresource: status
-      time: '2025-05-24T15:28:10Z'
-  name: bwt-test-node-hostname-deployment
-  namespace: bwt-test-namespace
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: bwt-test-node-hostname-deployment
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      autopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"name":"node-hostname-sha256-1"}]},"output":{"containers":[{"limits":{"ephemeral-storage":"1Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"node-hostname-sha256-1"}]},"computeClassAtAdmission":"Default","modified":true}'
+      autopilot.gke.io/warden-version: 32.29.0-gke.1
+      deployment.kubernetes.io/revision: "6"
+      gcb-build-id: b1ce37de-ad53-4fe7-a413-d3b6e05e9d08
+      gcb-trigger-id: acaef784-b39d-4ff9-ab56-82c229ee3205
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"autopilot.gke.io/resource-adjustment":"{\"input\":{\"containers\":[{\"name\":\"node-hostname-sha256-1\"}]},\"output\":{\"containers\":[{\"limits\":{\"ephemeral-storage\":\"1Gi\"},\"requests\":{\"cpu\":\"500m\",\"ephemeral-storage\":\"1Gi\",\"memory\":\"2Gi\"},\"name\":\"node-hostname-sha256-1\"}]},\"computeClassAtAdmission\":\"Default\",\"modified\":true}","autopilot.gke.io/warden-version":"32.29.0-gke.1","gcb-build-id":"b1ce37de-ad53-4fe7-a413-d3b6e05e9d08","gcb-trigger-id":"acaef784-b39d-4ff9-ab56-82c229ee3205"},"labels":{"app.kubernetes.io/managed-by":"gcp-cloud-build-deploy","app.kubernetes.io/name":"bwt-test-node-hostname-deployment","app.kubernetes.io/version":"5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4"},"managedFields":[{"apiVersion":"apps/v1","fieldsType":"FieldsV1","fieldsV1":{"f:metadata":{"f:labels":{".":{},"f:app.kubernetes.io/managed-by":{}}},"f:spec":{"f:progressDeadlineSeconds":{},"f:replicas":{},"f:revisionHistoryLimit":{},"f:selector":{},"f:strategy":{"f:rollingUpdate":{".":{},"f:maxSurge":{},"f:maxUnavailable":{}},"f:type":{}},"f:template":{"f:metadata":{"f:labels":{".":{},"f:app":{},"f:app.kubernetes.io/managed-by":{}}},"f:spec":{"f:containers":{"k:{\"name\":\"node-hostname-sha256-1\"}":{".":{},"f:image":{},"f:imagePullPolicy":{},"f:name":{},"f:resources":{},"f:terminationMessagePath":{},"f:terminationMessagePolicy":{}}},"f:dnsPolicy":{},"f:restartPolicy":{},"f:schedulerName":{},"f:securityContext":{},"f:terminationGracePeriodSeconds":{}}}}},"manager":"unknown","operation":"Update","time":"2025-05-24T15:18:08Z"},{"apiVersion":"apps/v1","fieldsType":"FieldsV1","fieldsV1":{"f:metadata":{"f:annotations":{"f:deployment.kubernetes.io/revision":{}}},"f:status":{"f:conditions":{".":{},"k:{\"type\":\"Available\"}":{".":{},"f:lastTransitionTime":{},"f:lastUpdateTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}},"k:{\"type\":\"Progressing\"}":{".":{},"f:lastTransitionTime":{},"f:lastUpdateTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}}},"f:observedGeneration":{},"f:replicas":{},"f:unavailableReplicas":{},"f:updatedReplicas":{}}},"manager":"kube-controller-manager","operation":"Update","subresource":"status","time":"2025-05-24T15:28:10Z"}],"name":"bwt-test-node-hostname-deployment","namespace":"bwt-test-namespace"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"bwt-test-node-hostname-deployment","app.kubernetes.io/managed-by":"gcp-cloud-build-deploy","app.kubernetes.io/name":"bwt-test-node-hostname-deployment"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"annotations":{"gcb-build-id":"b1ce37de-ad53-4fe7-a413-d3b6e05e9d08","gcb-trigger-id":"acaef784-b39d-4ff9-ab56-82c229ee3205"},"labels":{"app":"bwt-test-node-hostname-deployment","app.kubernetes.io/managed-by":"gcp-cloud-build-deploy","app.kubernetes.io/name":"bwt-test-node-hostname-deployment","app.kubernetes.io/version":"5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4"}},"spec":{"affinity":{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["bwt-test-node-hostname-deployment"]}]},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"image":"gcr.io/bwt-test-460814/github.com/msumla/node-hostname@sha256:f23d9205ddb36a7aa6fb5133a2b5e4642f51bb19facce7e9bf77a68b7ab1abe3","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/","port":3000},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":2},"name":"node-hostname-sha256-1","readinessProbe":{"failureThreshold":2,"httpGet":{"path":"/","port":3000},"initialDelaySeconds":5,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":2},"resources":{"limits":{"ephemeral-storage":"1Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"}},"securityContext":{"capabilities":{"drop":["NET_RAW"]}},"startupProbe":{"failureThreshold":30,"httpGet":{"path":"/","port":3000},"periodSeconds":1}}],"securityContext":{"seccompProfile":{"type":"RuntimeDefault"}},"tolerations":[{"effect":"NoSchedule","key":"kubernetes.io/arch","operator":"Equal","value":"amd64"}]}}}}
+    creationTimestamp: "2025-05-24T15:46:05Z"
+    generation: 17
+    labels:
       app.kubernetes.io/managed-by: gcp-cloud-build-deploy
       app.kubernetes.io/name: bwt-test-node-hostname-deployment
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
+      app.kubernetes.io/version: 5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4
+    name: bwt-test-node-hostname-deployment
+    namespace: bwt-test-namespace
+    resourceVersion: "1748165075903471021"
+    uid: 07458739-4c44-4a55-a6e8-125daf9c9334
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
         app: bwt-test-node-hostname-deployment
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         app.kubernetes.io/name: bwt-test-node-hostname-deployment
-    spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - bwt-test-node-hostname-deployment
-              topologyKey: kubernetes.io/hostname
-      containers:
-        - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          gcb-build-id: b1ce37de-ad53-4fe7-a413-d3b6e05e9d08
+          gcb-trigger-id: acaef784-b39d-4ff9-ab56-82c229ee3205
+        creationTimestamp: null
+        labels:
+          app: bwt-test-node-hostname-deployment
+          app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+          app.kubernetes.io/name: bwt-test-node-hostname-deployment
+          app.kubernetes.io/version: 5d2f4e7d0dcef8a72a49572d8d5104af9ba0d5d4
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - bwt-test-node-hostname-deployment
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname@sha256:f23d9205ddb36a7aa6fb5133a2b5e4642f51bb19facce7e9bf77a68b7ab1abe3
           imagePullPolicy: IfNotPresent
-          name: node-hostname-sha256-1
-          startupProbe:
-            httpGet:
-              path: /
-              port: 3000
-            failureThreshold: 30
-            periodSeconds: 1
           livenessProbe:
+            failureThreshold: 3
             httpGet:
               path: /
               port: 3000
+              scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
+            successThreshold: 1
             timeoutSeconds: 2
-            failureThreshold: 3
+          name: node-hostname-sha256-1
           readinessProbe:
+            failureThreshold: 2
             httpGet:
               path: /
               port: 3000
+              scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 2
             successThreshold: 1
+            timeoutSeconds: 2
           resources:
             limits:
               ephemeral-storage: 1Gi
@@ -151,159 +93,50 @@ spec:
           securityContext:
             capabilities:
               drop:
-                - NET_RAW
-      securityContext:
-        seccompProfile:
-          type: RuntimeDefault
-      tolerations:
+              - NET_RAW
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
+        terminationGracePeriodSeconds: 30
+        tolerations:
         - effect: NoSchedule
           key: kubernetes.io/arch
           operator: Equal
           value: amd64
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2025-05-24T15:46:05Z"
+      lastUpdateTime: "2025-05-24T16:41:25Z"
+      message: ReplicaSet "bwt-test-node-hostname-deployment-7ff64ccb6b" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2025-05-25T09:24:35Z"
+      lastUpdateTime: "2025-05-25T09:24:35Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 17
+    readyReplicas: 2
+    replicas: 2
+    updatedReplicas: 2
+kind: List
 metadata:
-  labels:
-    app: bwt-test-node-hostname-deployment
-  managedFields:
-    - apiVersion: autoscaling/v2
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:labels':
-            .: {}
-            'f:app': {}
-            'f:app.kubernetes.io/managed-by': {}
-        'f:spec':
-          'f:maxReplicas': {}
-          'f:metrics': {}
-          'f:minReplicas': {}
-          'f:scaleTargetRef':
-            'f:apiVersion': {}
-            'f:kind': {}
-            'f:name': {}
-      manager: unknown
-      operation: Update
-      time: '2025-05-24T15:03:28Z'
-    - apiVersion: autoscaling/v2
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:status':
-          'f:conditions':
-            .: {}
-            'k:{"type":"AbleToScale"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-            'k:{"type":"ScalingActive"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-            'k:{"type":"ScalingLimited"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-          'f:currentMetrics': {}
-          'f:currentReplicas': {}
-          'f:desiredReplicas': {}
-      manager: vpa-recommender
-      operation: Update
-      subresource: status
-      time: '2025-05-24T15:32:01Z'
-  name: bwt-test-node-hostname-deployment-hpa-uizm
-  namespace: bwt-test-namespace
-spec:
-  maxReplicas: 5
-  metrics:
-    - resource:
-        name: cpu
-        target:
-          averageUtilization: 80
-          type: Utilization
-      type: Resource
-  minReplicas: 2
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: bwt-test-node-hostname-deployment
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    cloud.google.com/neg: '{"ingress":true}'
-  finalizers:
-    - service.kubernetes.io/load-balancer-cleanup
-  labels:
-    app: bwt-test-node-hostname-deployment
-  managedFields:
-    - apiVersion: v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:labels':
-            .: {}
-            'f:app': {}
-        'f:spec':
-          'f:allocateLoadBalancerNodePorts': {}
-          'f:externalTrafficPolicy': {}
-          'f:internalTrafficPolicy': {}
-          'f:ports':
-            .: {}
-            'k:{"port":3000,"protocol":"TCP"}':
-              .: {}
-              'f:port': {}
-              'f:protocol': {}
-              'f:targetPort': {}
-          'f:selector': {}
-          'f:sessionAffinity': {}
-          'f:type': {}
-      manager: unknown
-      operation: Update
-      time: '2025-05-24T15:04:30Z'
-    - apiVersion: v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:finalizers':
-            .: {}
-            'v:"service.kubernetes.io/load-balancer-cleanup"': {}
-        'f:status':
-          'f:loadBalancer':
-            'f:ingress': {}
-      manager: cloud-controller-manager
-      operation: Update
-      subresource: status
-      time: '2025-05-24T15:05:47Z'
-  name: bwt-test-node-hostname-deployment-service
-  namespace: bwt-test-namespace
-spec:
-  allocateLoadBalancerNodePorts: true
-  clusterIP: 34.118.238.76
-  clusterIPs:
-    - 34.118.238.76
-  externalTrafficPolicy: Cluster
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-    - IPv4
-  ipFamilyPolicy: SingleStack
-  ports:
-    - nodePort: 30709
-      port: 3000
-      protocol: TCP
-      targetPort: 443
-  selector:
-    app: bwt-test-node-hostname-deployment
-    app.kubernetes.io/managed-by: cloud-console
-  sessionAffinity: None
-  type: LoadBalancer
+  resourceVersion: ""
