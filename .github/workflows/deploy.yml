@@ -48,9 +48,8 @@ jobs:
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker gcr.io --quiet
-          echo '{"registry-mirrors": ["https://gcr.io"]}' | sudo tee /etc/docker/daemon.json
-          sudo systemctl restart docker
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
+          docker-credential-gcr configure-docker --registries=gcr.io
 
       - name: Push to GCR
         run: |
