@@ -32,22 +32,12 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
           install_components: 'gke-gcloud-auth-plugin'
 
-      - name: Configure Docker
-        run: |
-          gcloud auth configure-docker gcr.io --quiet
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Push to GCR
-        run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-      - name: Get GKE credentials
-        run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Preview Kustomize changes
-        run: |
-          cd kubernetes/overlays/prod
-          kubectl kustomize . > kustomize-preview.yaml
-          echo "Kustomize preview saved to kustomize-preview.yaml" 
+        run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }} 
