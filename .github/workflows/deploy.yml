@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/github.com/${{ github.repository }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
 
 jobs:
   deploy:
@@ -35,8 +35,19 @@ jobs:
           docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
           docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
 
-      - name: Login to GCR
-        run: echo ${{ secrets.GCR_TOKEN }} | docker login -u oauth2accesstoken --password-stdin gcr.io
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/491882807232/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "github-actions-sa@bwt-test-460814.iam.gserviceaccount.com"
+          token_format: 'access_token'
+
+      - name: Set up Docker credentials
+        uses: docker/login-action@v3
+        with:
+          registry: gcr.io
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Push to GCR
         run: |
@@ -48,11 +59,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           install_components: 'gke-gcloud-auth-plugin'
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
