@@ -28,8 +28,18 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
-      - name: Login to GCR
-        run: echo ${{ secrets.GCR_TOKEN }} | docker login -u oauth2accesstoken --password-stdin gcr.io
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker gcr.io --quiet
 
       - name: Push to GCR
         run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }} 
