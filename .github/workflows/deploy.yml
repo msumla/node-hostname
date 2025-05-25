@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/github.com/${{ github.repository }}
 
 jobs:
   deploy:

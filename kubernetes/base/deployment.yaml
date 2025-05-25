@@ -34,7 +34,7 @@ spec:
               topologyKey: kubernetes.io/hostname
             weight: 100
       containers:
-      - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname@sha256:f23d9205ddb36a7aa6fb5133a2b5e4642f51bb19facce7e9bf77a68b7ab1abe3
+      - image: gcr.io/bwt-test-460814/github.com/msumla/node-hostname:latest
         imagePullPolicy: IfNotPresent
         name: node-hostname
         livenessProbe:

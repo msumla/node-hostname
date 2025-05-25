@@ -8,7 +8,7 @@ namePrefix: bwt-test-
 
 images:
   - name: node-hostname
-    newName: gcr.io/bwt-test-460814/node-hostname
+    newName: gcr.io/bwt-test-460814/github.com/msumla/node-hostname
     newTag: latest
 
 labels:
