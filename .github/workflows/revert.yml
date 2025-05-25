@@ -1,15 +1,15 @@
-name: Revert Changes
+name: Revert
 
 on:
   pull_request:
     types: [closed]
+    branches: [ master ]
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  GCR_HOSTNAME: gcr.io
-  IMAGE_NAME: ${{ env.GCR_HOSTNAME }}/${{ env.PROJECT_ID }}/github.com/${{ github.repository }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-hostname
 
 jobs:
   revert:
@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -29,6 +31,10 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           install_components: 'gke-gcloud-auth-plugin'
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker --quiet
 
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
@@ -39,20 +45,16 @@ jobs:
 
       - name: Revert deployment
         run: |
-          # Get the previous image tag
-          PREV_IMAGE=$(kubectl get deployment bwt-test-node-hostname -n bwt-test-namespace -o jsonpath='{.spec.template.spec.containers[0].image}')
-          
-          # Update kustomize with previous image
           cd kubernetes/overlays/prod
-          kustomize edit set image $PREV_IMAGE
-          
-          # Apply the reverted configuration
+          # Get the previous commit's image tag
+          PREVIOUS_SHA=$(git rev-parse HEAD)
+          # Update kustomization.yaml with the previous image tag
+          kustomize edit set image ${{ env.IMAGE_NAME }}:$PREVIOUS_SHA
+          # Apply the changes
           kubectl apply -k .
-          
-          # Wait for rollout to complete
           kubectl rollout status deployment/bwt-test-node-hostname -n bwt-test-namespace
 
       - name: Verify reversion
         run: |
           kubectl get pods -n bwt-test-namespace -l app=node-hostname
-          kubectl get ingress -n bwt-test-namespace bwt-test-node-hostname 
+          kubectl get deployment -n bwt-test-namespace bwt-test-node-hostname -o jsonpath='{.spec.template.spec.containers[0].image}' 
