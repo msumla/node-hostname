@@ -38,12 +38,25 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+      - name: Debug Auth
+        run: |
+          echo "=== GCloud Auth List ==="
+          gcloud auth list
+          echo "=== GCloud Config ==="
+          gcloud config list
+          echo "=== Docker Config ==="
+          cat ~/.docker/config.json || true
+          echo "=== GCloud Token ==="
+          gcloud auth print-access-token
+
       - name: Login to GCR
         run: |
           # Get a fresh access token
           TOKEN=$(gcloud auth print-access-token)
           # Login to Docker using the token
           echo $TOKEN | docker login -u oauth2accesstoken --password-stdin gcr.io
+          # Show Docker config after login
+          cat ~/.docker/config.json
 
       - name: Push to GCR
         run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }} 
