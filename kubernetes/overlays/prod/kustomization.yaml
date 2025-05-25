@@ -6,6 +6,11 @@ resources:
 
 namePrefix: bwt-test-
 
+images:
+  - name: node-hostname
+    newName: gcr.io/bwt-test-460814/node-hostname
+    newTag: latest
+
 labels:
   - pairs:
       environment: production
